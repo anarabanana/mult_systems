@@ -1,5 +1,4 @@
 import java.io.File;
-
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import org.gstreamer.ElementFactory;
@@ -8,9 +7,7 @@ import org.gstreamer.Pipeline;
 import org.gstreamer.State;
 import org.gstreamer.elements.PlayBin2;
 
-/**
- * A basic, non-gui player
- */
+
 public class AudioPlayTest1 extends GUI{
 	
 	private static  GUI gui;
@@ -20,20 +17,22 @@ public class AudioPlayTest1 extends GUI{
 	static Pipeline audiopipe;
 	static PlayBin2 playbin;
 	static int volume = 50;
-	private static DefaultListModel filelist = new DefaultListModel();
 	static String [] strPlay;
+	static String recPath = "/home/anar/workspace/Ex1/src/resources/test";
+	static String recDummy = "/home/anar/Desktop/devils_tears";
 	
 	
     public static void main(String[] args) {
     	gui = new GUI();
         args = Gst.init("AudioPlayer", args);
-        System.out.println(gui.getSelectedPlayItem().toString());
+        
+       
     }
     public static void record (){
     	
 		String [] rec = new String[]{"alsasrc", "!", "audioconvert" , "!", "audioresample" , 
 	           		"!", "vorbisenc", "!", "oggmux" , "!" , "filesink location = " +
-	           				"/home/anar/workspace/Ex1/src/resources/test"};
+	           				recPath};
 			
 		rec = Gst.init("AudioPlayer", rec); 
 		StringBuilder sb = new StringBuilder();
@@ -56,8 +55,8 @@ public class AudioPlayTest1 extends GUI{
 
     }
     public static void play (){
-    	   		
-    	strPlay = new String[]{"/home/anar/workspace/Ex1/src/resources/test", "/home/anar/Desktop/devils_tears"};
+	
+    	strPlay = new String[]{recPath,recDummy };
     	strPlay = Gst.init("AudioPlayer", strPlay);
 
         playbin = new PlayBin2("AudioPlayer");
@@ -65,10 +64,8 @@ public class AudioPlayTest1 extends GUI{
         		     
 		playbin.setInputFile(new File(gui.getSelectedPlayItem()));
 		
-		
-		Gst.main();
-		
-	
+		//playbin.setInputFile(new File(strPlay[1]));
+
     }
     public static void stop (){
    
