@@ -16,17 +16,20 @@ import java.awt.Toolkit;
 import java.awt.Color;
 import java.awt.SystemColor;
 import java.awt.Font;
+import java.io.File;
+
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.UIManager;
 
 
-public class GUI {
+public class GUI extends JFrame {
 
 	private JFrame frmAudio;
-	static String iconsPath = "/home/anar/workspace/Ex1/src/resources/";
-	 DefaultListModel filelist = new DefaultListModel<>();
-	 JList list  = new JList(filelist);
+	static String iconsPath = "src/resources/";
+	DefaultListModel filelist = new DefaultListModel<>();
+	final JList list = new JList(filelist);
+	private Recorder audio;
 	
 	
 	/**
@@ -52,6 +55,8 @@ public class GUI {
 	 */
 	public GUI() {
 		initialize();
+		audio = new Recorder(this);
+		
 		filelist.addElement("/home/anar/workspace/Ex1/src/resources/test");
 		filelist.addElement("/home/anar/Desktop/devils_tears");
 		}
@@ -138,7 +143,8 @@ public class GUI {
 			
 			public void actionPerformed(ActionEvent arg0) {
 				
-			AudioPlayTest1.record();
+			audio.record();
+		
 				}
 		});
 		frmAudio.getContentPane().add(record_btn, "4, 4");
@@ -147,7 +153,7 @@ public class GUI {
 		volume_up_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				AudioPlayTest1.volumeUp();
+				audio.volumeUp();
 			}
 		});
 		
@@ -157,7 +163,7 @@ public class GUI {
 		{
 			public void actionPerformed(ActionEvent e) {
 				
-				AudioPlayTest1.stop();
+				audio.stop();
 				}
 		});
 		frmAudio.getContentPane().add(stop_btn, "6, 4");
@@ -168,7 +174,7 @@ public class GUI {
 		play_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				AudioPlayTest1.play();
+				audio.play();
 			}
 		});
 		frmAudio.getContentPane().add(play_btn, "8, 4, left, default");
@@ -179,7 +185,7 @@ public class GUI {
 		volume_down_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {		
 				
-				AudioPlayTest1.volumeDown();
+				audio.volumeDown();
 			}
 			
 		});
@@ -191,17 +197,13 @@ public class GUI {
 		mute_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				AudioPlayTest1.mute();		
+				audio.mute();		
 			}
 		});
 
 		mute_btn.setIcon(new ImageIcon(iconsPath + "mute-2.png"));
 		frmAudio.getContentPane().add(mute_btn, "8, 10");
-		
-		 
-		
-		
-		
+
 		list.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent arg0) {
 				if (arg0.getValueIsAdjusting() == false) {
@@ -222,7 +224,7 @@ public class GUI {
 
 	public String getSelectedPlayItem() {
 	
-		return list.getSelectedValue().toString();
+		return (String) list.getSelectedValue();
 		
 	}
 

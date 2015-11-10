@@ -6,11 +6,12 @@ import org.gstreamer.Gst;
 import org.gstreamer.Pipeline;
 import org.gstreamer.State;
 import org.gstreamer.elements.PlayBin2;
+import org.omg.CORBA.PUBLIC_MEMBER;
 
 
-public class AudioPlayTest1 extends GUI{
+public class Recorder {
 	
-	private static  GUI gui;
+	private GUI gui;
 	static Pipeline pipe;
 	static boolean isRecord = true;
 	static boolean isMute = true;
@@ -21,14 +22,14 @@ public class AudioPlayTest1 extends GUI{
 	static String recPath = "/home/anar/workspace/Ex1/src/resources/test";
 	static String recDummy = "/home/anar/Desktop/devils_tears";
 	
-	
-    public static void main(String[] args) {
-    	gui = new GUI();
-        args = Gst.init("AudioPlayer", args);
-        
-       
+	public Recorder(GUI gui) {
+		// TODO Auto-generated constructor stub
+		this.gui = gui;
+	}
+    public static void main() {
+
     }
-    public static void record (){
+    public void record (){
     	
 		String [] rec = new String[]{"alsasrc", "!", "audioconvert" , "!", "audioresample" , 
 	           		"!", "vorbisenc", "!", "oggmux" , "!" , "filesink location = " +
@@ -54,24 +55,26 @@ public class AudioPlayTest1 extends GUI{
 			}
 
     }
-    public static void play (){
+    public void play (){
 	
     	strPlay = new String[]{recPath,recDummy };
     	strPlay = Gst.init("AudioPlayer", strPlay);
 
         playbin = new PlayBin2("AudioPlayer");
         playbin.setVideoSink(ElementFactory.make("fakesink", "videosink"));
-        		     
-		playbin.setInputFile(new File(gui.getSelectedPlayItem()));
+        System.out.println(gui.getSelectedPlayItem().toString());	     
+		playbin.setInputFile(new File(gui.getSelectedPlayItem().toString()));
+				
+		//playbin.setInputFile(new File(recDummy));
 		
-		//playbin.setInputFile(new File(strPlay[1]));
+		playbin.play();
 
     }
-    public static void stop (){
+    public void stop (){
    
         playbin.stop();
     }
-    public static void mute (){
+    public void mute (){
     	  		
 		if(isMute)
 		{
@@ -84,12 +87,12 @@ public class AudioPlayTest1 extends GUI{
 		}
     }
  
-    public static void volumeUp (){
+    public void volumeUp (){
     	   
 		volume = volume + 10;
 		playbin.setVolumePercent(volume);
     }
-    public static void volumeDown (){
+    public void volumeDown (){
     	   
 		volume = volume-10;
 		playbin.setVolumePercent(volume);
