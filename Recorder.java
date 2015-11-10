@@ -1,4 +1,8 @@
 import java.io.File;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import org.gstreamer.ElementFactory;
@@ -19,8 +23,9 @@ public class Recorder {
 	static PlayBin2 playbin;
 	static int volume = 50;
 	static String [] strPlay;
-	static String recPath = "/home/anar/workspace/Ex1/src/resources/test";
-	static String recDummy = "/home/anar/Desktop/devils_tears";
+	static String recPath = "/home/ashraf/workspace/multi2/src/resources/recordings";
+	static String recDummy = "/home/ashraf/Desktop/devils_tears";
+	//static String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 	
 	public Recorder(GUI gui) {
 		// TODO Auto-generated constructor stub
@@ -33,7 +38,7 @@ public class Recorder {
     	
 		String [] rec = new String[]{"alsasrc", "!", "audioconvert" , "!", "audioresample" , 
 	           		"!", "vorbisenc", "!", "oggmux" , "!" , "filesink location = " +
-	           				recPath};
+	           				recPath + new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime())+".ogg" };
 			
 		rec = Gst.init("AudioPlayer", rec); 
 		StringBuilder sb = new StringBuilder();
@@ -45,6 +50,7 @@ public class Recorder {
 			
 			if(isRecord)
 			{
+				
 				audiopipe = Pipeline.launch(sb.substring(1));	
 				audiopipe.play();
 				isRecord = false ;}
