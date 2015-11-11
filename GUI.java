@@ -22,7 +22,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.UIManager;
 
-
 public class GUI extends JFrame {
 
 	private JFrame frmAudio;
@@ -30,15 +29,14 @@ public class GUI extends JFrame {
 	DefaultListModel filelist = new DefaultListModel<>();
 	final JList list = new JList(filelist);
 	private Recorder audio;
-	
-	
+
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-	
+
 		EventQueue.invokeLater(new Runnable() {
-			
+
 			public void run() {
 				try {
 					GUI window = new GUI();
@@ -56,10 +54,10 @@ public class GUI extends JFrame {
 	public GUI() {
 		initialize();
 		audio = new Recorder(this);
-		
-		filelist.addElement("/home/anar/workspace/Ex1/src/resources/test");
-		filelist.addElement("/home/anar/Desktop/devils_tears");
-		}
+
+		filelist.addElement("test");
+		filelist.addElement("devils_tears");
+	}
 
 	/**
 	 * Initialize the contents of the frame.
@@ -71,133 +69,94 @@ public class GUI extends JFrame {
 		frmAudio.getContentPane().setForeground(SystemColor.controlHighlight);
 		frmAudio.getContentPane().setBackground(Color.WHITE);
 		frmAudio.setTitle("Audio recorder");
-		frmAudio.setIconImage(Toolkit.getDefaultToolkit().getImage(iconsPath +"MicrophoneHot.png"));
+		frmAudio.setIconImage(Toolkit.getDefaultToolkit().getImage(iconsPath + "MicrophoneHot.png"));
 		frmAudio.setBounds(100, 100, 450, 323);
 		frmAudio.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frmAudio.getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"),
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,},
-			new RowSpec[] {
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("default:grow"),
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("default:grow"),
-				FormFactory.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("default:grow"),
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,}));
-		
+		frmAudio.getContentPane()
+				.setLayout(
+						new FormLayout(new ColumnSpec[] { FormFactory.RELATED_GAP_COLSPEC, FormFactory.DEFAULT_COLSPEC,
+								FormFactory.RELATED_GAP_COLSPEC, FormFactory.DEFAULT_COLSPEC, FormFactory.RELATED_GAP_COLSPEC,
+								FormFactory.DEFAULT_COLSPEC, FormFactory.RELATED_GAP_COLSPEC, FormFactory.DEFAULT_COLSPEC,
+								FormFactory.RELATED_GAP_COLSPEC, FormFactory.DEFAULT_COLSPEC, FormFactory.RELATED_GAP_COLSPEC,
+								FormFactory.DEFAULT_COLSPEC, FormFactory.RELATED_GAP_COLSPEC, FormFactory.DEFAULT_COLSPEC,
+								FormFactory.RELATED_GAP_COLSPEC, ColumnSpec.decode("default:grow"), FormFactory.RELATED_GAP_COLSPEC,
+								FormFactory.DEFAULT_COLSPEC, FormFactory.RELATED_GAP_COLSPEC, FormFactory.DEFAULT_COLSPEC,
+								FormFactory.RELATED_GAP_COLSPEC, FormFactory.DEFAULT_COLSPEC, FormFactory.RELATED_GAP_COLSPEC,
+								FormFactory.DEFAULT_COLSPEC, }, new RowSpec[] { FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
+								FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC, FormFactory.RELATED_GAP_ROWSPEC,
+								FormFactory.DEFAULT_ROWSPEC, FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
+								FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC, FormFactory.RELATED_GAP_ROWSPEC,
+								FormFactory.DEFAULT_ROWSPEC, FormFactory.RELATED_GAP_ROWSPEC, RowSpec.decode("default:grow"),
+								FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC, FormFactory.RELATED_GAP_ROWSPEC,
+								RowSpec.decode("default:grow"), FormFactory.RELATED_GAP_ROWSPEC, RowSpec.decode("default:grow"),
+								FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC, FormFactory.RELATED_GAP_ROWSPEC,
+								FormFactory.DEFAULT_ROWSPEC, FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
+								FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC, FormFactory.RELATED_GAP_ROWSPEC,
+								FormFactory.DEFAULT_ROWSPEC, FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
+								FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC, }));
+
 		JButton record_btn = new JButton("");
 		record_btn.setHorizontalAlignment(SwingConstants.LEFT);
 		record_btn.setIcon(new ImageIcon(iconsPath + "RecordPressed (1).png"));
-		
+
 		record_btn.addActionListener(new ActionListener() {
-			
+
 			public void actionPerformed(ActionEvent arg0) {
-				
-			audio.record();
-		
-				}
+
+				audio.record();
+
+			}
 		});
 		frmAudio.getContentPane().add(record_btn, "4, 4");
-		
+
 		JButton volume_up_btn = new JButton("");
 		volume_up_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				audio.volumeUp();
 			}
 		});
-		
+
 		JButton stop_btn = new JButton("");
 		stop_btn.setIcon(new ImageIcon(iconsPath + "Stop1Normal (1).png"));
-		stop_btn.addActionListener(new ActionListener()
-		{
+		stop_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				audio.stop();
-				}
+			}
 		});
 		frmAudio.getContentPane().add(stop_btn, "6, 4");
-		
+
 		JButton play_btn = new JButton("");
-		play_btn.setIcon(new ImageIcon(iconsPath+"Play1Pressed (1).png"));
-		
+		play_btn.setIcon(new ImageIcon(iconsPath + "Play1Pressed (1).png"));
+
 		play_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				audio.play();
 			}
 		});
 		frmAudio.getContentPane().add(play_btn, "8, 4, left, default");
-		volume_up_btn.setIcon(new ImageIcon(iconsPath+"VolumeNormalRed.png"));
+		volume_up_btn.setIcon(new ImageIcon(iconsPath + "VolumeNormalRed.png"));
 		frmAudio.getContentPane().add(volume_up_btn, "4, 10");
-		
+
 		JButton volume_down_btn = new JButton("");
 		volume_down_btn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {		
-				
+			public void actionPerformed(ActionEvent e) {
+
 				audio.volumeDown();
 			}
-			
+
 		});
-		volume_down_btn.setIcon(new ImageIcon(iconsPath+ "VolumeDisabled.png"));
+		volume_down_btn.setIcon(new ImageIcon(iconsPath + "VolumeDisabled.png"));
 		frmAudio.getContentPane().add(volume_down_btn, "6, 10");
-		
+
 		JButton mute_btn = new JButton("");
-		
+
 		mute_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
-				audio.mute();		
+
+				audio.mute();
 			}
 		});
 
@@ -207,10 +166,10 @@ public class GUI extends JFrame {
 		list.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent arg0) {
 				if (arg0.getValueIsAdjusting() == false) {
-					
-				System.out.println(list.getSelectedValue());
+
+					System.out.println(list.getSelectedValue());
 				}
-				}
+			}
 		});
 		list.setBorder(UIManager.getBorder("List.focusCellHighlightBorder"));
 		list.setBackground(Color.WHITE);
@@ -221,11 +180,9 @@ public class GUI extends JFrame {
 
 	}
 
-
 	public String getSelectedPlayItem() {
-	
 		return (String) list.getSelectedValue();
-		
+
 	}
 
 }
