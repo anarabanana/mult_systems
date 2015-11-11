@@ -1,4 +1,8 @@
 import java.io.File;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import org.gstreamer.ElementFactory;
@@ -12,6 +16,7 @@ public class Recorder {
 
 	private GUI gui;
 	static Pipeline pipe;
+	
 	private boolean isRecord = true;
 	private boolean isMute = true;
 	private Pipeline audiopipe;
@@ -20,47 +25,49 @@ public class Recorder {
 	private String[] strPlay;
 	private String recPath = "test";
 	private String recDummy = "devils_tears";
-
+	//static String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+	
 	public Recorder(GUI gui) {
 		// TODO Auto-generated constructor stub
 		this.gui = gui;
 	}
 
-	public void record() {
-
-		String[] rec = new String[] { "alsasrc", "!", "audioconvert", "!", "audioresample", "!", "vorbisenc", "!", "oggmux", "!",
-				"filesink location = " + recPath };
-
-		rec = Gst.init("AudioPlayer", rec);
+    public void record (){
+    	
+		String [] rec = new String[]{"alsasrc", "!", "audioconvert" , "!", "audioresample" , 
+	           		"!", "vorbisenc", "!", "oggmux" , "!" , "filesink location = " +
+	           				recPath + new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime())+".ogg" };
+			
+		rec = Gst.init("AudioPlayer", rec); 
 		StringBuilder sb = new StringBuilder();
 
-		for (String s : rec) {
-			sb.append(' ');
-			sb.append(s);
-		}
+			for (String s: rec) {
+				 sb.append(' ');
+				 sb.append(s);  
+				 				}
+			
+			if(isRecord)
+			{
+				
+				audiopipe = Pipeline.launch(sb.substring(1));	
+				audiopipe.play();
+				isRecord = false ;}
+			else
+			{
+				audiopipe.stop();
+				isRecord = true;
+			}
 
-		if (isRecord) {
-			audiopipe = Pipeline.launch(sb.substring(1));
-			audiopipe.play();
-			isRecord = false;
-		} else {
-			audiopipe.stop();
-			isRecord = true;
-		}
+    }
+    public void play (){
+	
+    	strPlay = new String[]{recPath,recDummy };
+    	strPlay = Gst.init("AudioPlayer", strPlay);
 
-	}
-
-	public void play() {
-
-		strPlay = Gst.init("AudioPlayer", strPlay);
-
-		playbin = new PlayBin2("AudioPlayer");
-		playbin.setVideoSink(ElementFactory.make("fakesink", "videosink"));
-		
-		System.out.println(gui.getSelectedPlayItem().toString());
+        playbin = new PlayBin2("AudioPlayer");
+        playbin.setVideoSink(ElementFactory.make("fakesink", "videosink"));
+        System.out.println(gui.getSelectedPlayItem().toString());	     
 		playbin.setInputFile(new File(gui.getSelectedPlayItem().toString()));
-
-		// playbin.setInputFile(new File(recDummy));
 
 		playbin.play();
 

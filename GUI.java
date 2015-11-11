@@ -17,6 +17,7 @@ import java.awt.Color;
 import java.awt.SystemColor;
 import java.awt.Font;
 import java.io.File;
+import java.io.FileFilter;
 
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
@@ -27,7 +28,18 @@ public class GUI extends JFrame {
 	private JFrame frmAudio;
 	static String iconsPath = "src/resources/";
 	DefaultListModel filelist = new DefaultListModel<>();
-	final JList list = new JList(filelist);
+	//final JList list = new JList(filelist);
+	FileFilter ff =new FileFilter() {
+		
+		@Override
+		public boolean accept(File pathname) {
+			// TODO Auto-generated method stub
+			 String name = pathname.getName().toLowerCase();
+		        return name.endsWith(".ogg") || name.endsWith(".mp3");
+			
+		}
+	};
+	final JList list = new JList(new File("/home/ashraf/workspace/multi2/src/resources/recordings").listFiles(ff));
 	private Recorder audio;
 
 	/**
@@ -176,6 +188,8 @@ public class GUI extends JFrame {
 		frmAudio.getContentPane().add(list, "4, 16, 10, 4, default, fill");
 		list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+		list.setAutoscrolls(true);
+		//list.setBounds(MAXIMIZED_HORIZ, MAXIMIZED_VERT, MAXIMIZED_BOTH, MAXIMIZED_BOTH);
 		list.setVisibleRowCount(-1);
 
 	}
@@ -183,6 +197,10 @@ public class GUI extends JFrame {
 	public String getSelectedPlayItem() {
 		return (String) list.getSelectedValue();
 
+	}
+	public void refreshFileList()
+	{
+		
 	}
 
 }
