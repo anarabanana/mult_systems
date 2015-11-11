@@ -2,7 +2,6 @@ import java.io.File;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import org.gstreamer.ElementFactory;
