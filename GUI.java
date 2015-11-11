@@ -26,20 +26,20 @@ import javax.swing.UIManager;
 public class GUI extends JFrame {
 
 	private JFrame frmAudio;
-	static String iconsPath = "src/resources/";
+	private static String iconsPath = "src/resources/";
 	DefaultListModel filelist = new DefaultListModel<>();
-	//final JList list = new JList(filelist);
-	FileFilter ff =new FileFilter() {
-		
+	// final JList list = new JList(filelist);
+	FileFilter ff = new FileFilter() {
+
 		@Override
 		public boolean accept(File pathname) {
 			// TODO Auto-generated method stub
-			 String name = pathname.getName().toLowerCase();
-		        return name.endsWith(".ogg") || name.endsWith(".mp3");
-			
+			String name = pathname.getName().toLowerCase();
+			return name.endsWith(".ogg") || name.endsWith(".mp3");
+
 		}
 	};
-	final JList list = new JList(new File("/home/ashraf/workspace/multi2/src/resources/recordings").listFiles(ff));
+	final JList list = new JList(new File(Recorder.recordingsPath).listFiles(ff));
 	private Recorder audio;
 
 	/**
@@ -189,18 +189,18 @@ public class GUI extends JFrame {
 		list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		list.setAutoscrolls(true);
-		//list.setBounds(MAXIMIZED_HORIZ, MAXIMIZED_VERT, MAXIMIZED_BOTH, MAXIMIZED_BOTH);
+		// list.setBounds(MAXIMIZED_HORIZ, MAXIMIZED_VERT, MAXIMIZED_BOTH,
+		// MAXIMIZED_BOTH);
 		list.setVisibleRowCount(-1);
 
 	}
 
 	public String getSelectedPlayItem() {
-		return (String) list.getSelectedValue();
-
+		return list.getSelectedValue().toString();
 	}
-	public void refreshFileList()
-	{
-		
+
+	public void refreshFileList() {
+
 	}
 
 }

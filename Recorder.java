@@ -23,7 +23,7 @@ public class Recorder {
 	private PlayBin2 playbin;
 	private int volume = 50;
 	private String[] strPlay;
-	private String recPath = "test";
+	public static String recordingsPath = "src/recordings/";
 	private String recDummy = "devils_tears";
 	//static String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 	
@@ -36,7 +36,7 @@ public class Recorder {
     	
 		String [] rec = new String[]{"alsasrc", "!", "audioconvert" , "!", "audioresample" , 
 	           		"!", "vorbisenc", "!", "oggmux" , "!" , "filesink location = " +
-	           				recPath + new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime())+".ogg" };
+	           				recordingsPath + new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime())+".ogg" };
 			
 		rec = Gst.init("AudioPlayer", rec); 
 		StringBuilder sb = new StringBuilder();
@@ -61,13 +61,13 @@ public class Recorder {
     }
     public void play (){
 	
-    	strPlay = new String[]{recPath,recDummy };
-    	strPlay = Gst.init("AudioPlayer", strPlay);
+    	String[] args = new String[]{recordingsPath};
+    	strPlay = Gst.init("AudioPlayer", args);
 
         playbin = new PlayBin2("AudioPlayer");
         playbin.setVideoSink(ElementFactory.make("fakesink", "videosink"));
-        System.out.println(gui.getSelectedPlayItem().toString());	     
-		playbin.setInputFile(new File(gui.getSelectedPlayItem().toString()));
+//        System.out.println(gui.getSelectedPlayItem().toString());	     
+		playbin.setInputFile(new File(gui.getSelectedPlayItem()));
 
 		playbin.play();
 
