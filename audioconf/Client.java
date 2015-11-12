@@ -14,6 +14,7 @@ public class Client {
 	public static String clients = "localhost:5001,130.240.159.8:5001";
 	public static int udp_port = 5001;
 	private Client client;
+	boolean multicast = true;
 
 	public static void main(String[] args) {
 		new Client(args);
@@ -29,12 +30,12 @@ public class Client {
 		}.start();
 		new Thread() {
 			public void run() {
-				client.makeListeningPipe();
+				client.makeListeningPipe(multicast);
 			}
 		}.start();
 	}
 
-	private void makeListeningPipe() {
+	private void makeListeningPipe(boolean multicast) {
 		String[] args = {};
 		Gst.init("AudioPipe", args);
 
@@ -42,7 +43,10 @@ public class Client {
 
 		// Create elements.
 		Element src = ElementFactory.make("udpsrc", "Source");
-		
+		if (multicast) {
+			src.set("multicast-group", "224.1.1.1");
+			src.set("auto-multicast", true);
+		}
 		src.set("port", udp_port);
 
 		String xrtp = "application/x-rtp, media=audio, clock-rate=44100, width=16, height=16, channel=1, channel-position=1, payload=96, encoding-name=L16, encoding-params=1";
@@ -141,11 +145,12 @@ public class Client {
 
 		Element rtpPay = ElementFactory.make("rtpL16pay", "rtpL16pay");
 
-		Element sink = ElementFactory.make("multiudpsink", "udpsink");
-		sink.set("clients", clients);
-//		Element sink = ElementFactory.make("udpsink", "udpsink");
-//		sink.set("host", "localhost");
-//		sink.set("port", udp_port);
+//		Element sink = ElementFactory.make("multiudpsink", "multiudpsink");
+//		sink.set("clients", clients);
+		Element sink = ElementFactory.make("udpsink", "udpsink");
+		sink.set("host", "224.1.1.1");
+		sink.set("auto-multicast", true);
+		sink.set("port", udp_port);
 
 		/* put together a pipeline */
 		pipeline.addMany(source, audioconvert, caps, rtpPay, sink);
