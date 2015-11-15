@@ -33,9 +33,11 @@ public class Recorder {
 
     public void record (){
     	
+    	String currenttime = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 		String [] rec = new String[]{"alsasrc", "!", "audioconvert" , "!", "audioresample" , 
 	           		"!", "vorbisenc", "!", "oggmux" , "!" , "filesink location = " +
-	           				recordingsPath + new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime())+".ogg" };
+	          				recordingsPath + currenttime +".ogg" };
+		
 			
 		rec = Gst.init("AudioPlayer", rec); 
 		StringBuilder sb = new StringBuilder();
@@ -54,6 +56,7 @@ public class Recorder {
 			else
 			{
 				audiopipe.stop();
+				gui.addNewFiletoList(recordingsPath+currenttime+".ogg");
 				isRecord = true;
 			}
 

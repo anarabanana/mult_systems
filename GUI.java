@@ -1,15 +1,21 @@
 import java.awt.EventQueue;
+
+import javax.management.modelmbean.ModelMBean;
 import javax.swing.JFrame;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.factories.FormFactory;
+import com.sun.jna.platform.win32.LMAccess;
+
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
+import javax.swing.JScrollPane;
+import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import java.awt.Toolkit;
@@ -27,8 +33,11 @@ public class GUI extends JFrame {
 
 	private JFrame frmAudio;
 	private static String iconsPath = "src/resources/";
-	DefaultListModel filelist = new DefaultListModel<>();
+	public DefaultListModel LM = new DefaultListModel();
+	
+	
 	// final JList list = new JList(filelist);
+	
 	FileFilter ff = new FileFilter() {
 
 		@Override
@@ -39,7 +48,15 @@ public class GUI extends JFrame {
 
 		}
 	};
-	final JList list = new JList(new File(Recorder.recordingsPath).listFiles(ff));
+	
+	
+	//JList list = new JList(new File(Recorder.recordingsPath).listFiles(ff));
+
+	JList list = new JList(LM);
+	
+	
+	JScrollPane scrollpane = new JScrollPane(list);
+	
 	private Recorder audio;
 
 	/**
@@ -52,7 +69,9 @@ public class GUI extends JFrame {
 			public void run() {
 				try {
 					GUI window = new GUI();
+					window.SetInitialFileList();
 					window.frmAudio.setVisible(true);
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -67,13 +86,30 @@ public class GUI extends JFrame {
 		initialize();
 		audio = new Recorder(this);
 
-		filelist.addElement("test");
-		filelist.addElement("devils_tears");
+		
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
+	private void SetInitialFileList()
+	{
+		File [] my_records;
+		my_records = new File(Recorder.recordingsPath).listFiles(ff);
+		
+		for (File c : my_records)
+		{
+			LM.addElement(c);
+		}
+		
+	}
+	public void addNewFiletoList(String nameandpath)
+	{
+		LM.addElement(nameandpath);
+	}
+	
+	
+	
 	private void initialize() {
 		frmAudio = new JFrame();
 		frmAudio.setAlwaysOnTop(true);
@@ -82,7 +118,7 @@ public class GUI extends JFrame {
 		frmAudio.getContentPane().setBackground(Color.WHITE);
 		frmAudio.setTitle("Audio recorder");
 		frmAudio.setIconImage(Toolkit.getDefaultToolkit().getImage(iconsPath + "MicrophoneHot.png"));
-		frmAudio.setBounds(100, 100, 450, 323);
+		frmAudio.setBounds(100, 100, 722, 456);
 		frmAudio.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmAudio.getContentPane()
 				.setLayout(
@@ -185,7 +221,7 @@ public class GUI extends JFrame {
 		});
 		list.setBorder(UIManager.getBorder("List.focusCellHighlightBorder"));
 		list.setBackground(Color.WHITE);
-		frmAudio.getContentPane().add(list, "4, 16, 10, 4, default, fill");
+		frmAudio.getContentPane().add(scrollpane, "4, 16, 12, 8, default, fill");
 		list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		list.setAutoscrolls(true);
