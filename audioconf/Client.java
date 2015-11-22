@@ -11,41 +11,81 @@ import org.gstreamer.State;
 
 public class Client {
 
-	public static String clients = "localhost:5001,130.240.159.8:5001";
+	public static String clients = "";
 	public static int udp_port = 5001;
+	
 	private Client client;
-	boolean multicast = true;
+	
+	boolean multicast = false;
+	
+	Pipeline listeningPipe;
+	Pipeline sendingPipe;
 
 	public static void main(String[] args) {
-		new Client(args);
+		new Client();
 	}
 	
-	public Client(String[] args) {
+	public Client() {
 		client = this;
+	}
+	
+	public void start() {
+		startListeningPipe();
+		startSendingPipe();
+	}
+	
+	public void stop() {
+		stopSendingPipe();
+		stopListeningPipe();
+	}
+	
+	public void stopSendingPipe() {
+		sendingPipe.stop();
+	}
+	
+	public void stopListeningPipe() {
+		listeningPipe.stop();
+	}
+
+	public void startSendingPipe() {
 		new Thread() {
 			public void run() {
 				client.makeSendingPipe();
-				client.makeMulticastSendingPipe();
 			}
-		}.start();
+		}.start();	
+	}
+	
+	public void startListeningPipe() {
 		new Thread() {
 			public void run() {
-				client.makeListeningPipe(multicast);
+				client.makeListeningPipe();
 			}
-		}.start();
+		}.start();	
 	}
-
-	private void makeListeningPipe(boolean multicast) {
+	
+	public void restartSendingPipe() {
+		sendingPipe.stop();
+		startSendingPipe();
+	}
+	
+	public void restartListeningPipe() {
+		listeningPipe.stop();
+		startListeningPipe();
+	}
+	
+	private void makeListeningPipe() {
 		String[] args = {};
 		Gst.init("AudioPipe", args);
 
-		Pipeline pipe = new Pipeline("AudioPipe");
+		listeningPipe = new Pipeline("AudioPipe");
 
 		// Create elements.
 		Element src = ElementFactory.make("udpsrc", "Source");
 		if (multicast) {
-			src.set("multicast-group", "224.1.1.1");
+			System.out.println("multicast!");
+			src.set("multicast-group", "239.255.43.43");
 			src.set("auto-multicast", true);
+			src.set("multicast-iface", "eth0");
 		}
 		src.set("port", udp_port);
 
@@ -62,14 +102,14 @@ public class Client {
 		Element sink = ElementFactory.make("alsasink", "Destination");
 
 		// Create pipeline.
-		pipe.addMany(src, buffer, depay, convert, sink);
+		listeningPipe.addMany(src, buffer, depay, convert, sink);
 		src.link(buffer, depay, convert, sink);
 		
 		System.out.println("START ListeningPipe");
 		// Start
-		pipe.setState(State.PLAYING);
+		listeningPipe.setState(State.PLAYING);
 		Gst.main();
-		pipe.setState(State.NULL);
+		listeningPipe.setState(State.NULL);
 
 		// String[] rec = new String[] {
 		// "udpsrc port = 5002",
@@ -101,7 +141,7 @@ public class Client {
 		Gst.init("Server", args);
 
 		/* create elements */
-		Pipeline pipeline = new Pipeline("send_pipeline");
+		sendingPipe = new Pipeline("send_pipeline");
 
 		Element source = ElementFactory.make("alsasrc", "alsasrc");
 		Element audioconvert = ElementFactory.make("audioconvert", "audioconvert");
@@ -111,56 +151,40 @@ public class Client {
 		caps.setCaps(Caps.fromString("audio/x-raw-int,channels=1,depth=16,width=16,rate=44100"));
 
 		Element rtpPay = ElementFactory.make("rtpL16pay", "rtpL16pay");
-
-		Element sink = ElementFactory.make("multiudpsink", "udpsink");
-		sink.set("clients", clients);
+		
+		Element sink;
+		if (multicast) {
+			sink = ElementFactory.make("udpsink", "udpsink");
+			sink.set("host", "239.255.43.43");
+			sink.set("port", udp_port);
+			sink.set("auto-multicast", true);
+		} else {
+			sink = ElementFactory.make("multiudpsink", "udpsink");
+			sink.set("clients", clients);
+		}
+			
 //		Element sink = ElementFactory.make("udpsink", "udpsink");
 //		sink.set("host", "localhost");
 //		sink.set("port", udp_port);
 
 		/* put together a pipeline */
-		pipeline.addMany(source, audioconvert, caps, rtpPay, sink);
+		sendingPipe.addMany(source, audioconvert, caps, rtpPay, sink);
 		Element.linkMany(source, audioconvert, caps, rtpPay, sink);
 
 		System.out.println("START SendingPipe");
 		/* start the pipeline */
-		pipeline.play();
+		sendingPipe.play();
 		Gst.main();
-		pipeline.stop();
+//		sendingPipe.stop();
 	}
-
-	private void makeMulticastSendingPipe() {
-		String[] args = {};
-		Gst.init("Server", args);
-
-		/* create elements */
-		Pipeline pipeline = new Pipeline("send_pipeline");
-
-		Element source = ElementFactory.make("alsasrc", "alsasrc");
-		Element audioconvert = ElementFactory.make("audioconvert", "audioconvert");
-
-		Element caps = ElementFactory.make("capsfilter", "caps");
-
-		caps.setCaps(Caps.fromString("audio/x-raw-int,channels=1,depth=16,width=16,rate=44100"));
-
-		Element rtpPay = ElementFactory.make("rtpL16pay", "rtpL16pay");
-
-//		Element sink = ElementFactory.make("multiudpsink", "multiudpsink");
-//		sink.set("clients", clients);
-		Element sink = ElementFactory.make("udpsink", "udpsink");
-		sink.set("host", "224.1.1.1");
-		sink.set("auto-multicast", true);
-		sink.set("port", udp_port);
-
-		/* put together a pipeline */
-		pipeline.addMany(source, audioconvert, caps, rtpPay, sink);
-		Element.linkMany(source, audioconvert, caps, rtpPay, sink);
-
-		System.out.println("START SendingPipe");
-		/* start the pipeline */
-		pipeline.play();
-		Gst.main();
-		pipeline.stop();
+	
+	public void setClients(String clts) {
+		System.out.println(clts);
+		clients = clts;
+	}
+	
+	public void setPort(int port) {
+		udp_port = port;
 	}
 
 }

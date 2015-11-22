@@ -15,7 +15,7 @@ public class Recorder {
 
 	private GUI gui;
 	static Pipeline pipe;
-	
+
 	private boolean isRecord = true;
 	private boolean isMute = true;
 	private Pipeline audiopipe;
@@ -24,51 +24,57 @@ public class Recorder {
 	private String[] strPlay;
 	public static String recordingsPath = "src/recordings/";
 	private String recDummy = "devils_tears";
-	//static String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
-	
+	private String filename;
+
+	// static String timeStamp = new
+	// SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+
 	public Recorder(GUI gui) {
 		// TODO Auto-generated constructor stub
 		this.gui = gui;
 	}
 
-    public void record (){
-    	
-    	String currenttime = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
-		String [] rec = new String[]{"alsasrc", "!", "audioconvert" , "!", "audioresample" , 
-	           		"!", "vorbisenc", "!", "oggmux" , "!" , "filesink location = " +
-	          				recordingsPath + currenttime +".ogg" };
-		
+	public void record() {
+		if (isRecord) {
+			isRecord = false;
 			
-		rec = Gst.init("AudioPlayer", rec); 
-		StringBuilder sb = new StringBuilder();
+			String currenttime = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+			filename = recordingsPath + currenttime + ".ogg";
+			System.out.println(filename);
+			
+			String[] rec = new String[] { "alsasrc", "!", "audioconvert", "!", "audioresample", "!", "vorbisenc", "!", "oggmux", "!",
+					"filesink location = " + filename };
 
-			for (String s: rec) {
-				 sb.append(' ');
-				 sb.append(s);  
-				 				}
-			
-			if(isRecord)
-			{
-				
-				audiopipe = Pipeline.launch(sb.substring(1));	
-				audiopipe.play();
-				isRecord = false ;}
-			else
-			{
-				audiopipe.stop();
-				gui.addNewFiletoList(recordingsPath+currenttime+".ogg");
-				isRecord = true;
+			rec = Gst.init("AudioRecorder", rec);
+			StringBuilder sb = new StringBuilder();
+
+			for (String s : rec) {
+				sb.append(' ');
+				sb.append(s);
 			}
+			
+			audiopipe = Pipeline.launch(sb.substring(1));
+			audiopipe.play();
+		} else {
+			audiopipe.stop();
+//			Gst.deinit();
+//			Gst.quit();
+//			audiopipe.setState(null);
+			System.out.println(filename);
+			gui.addNewFiletoList(filename);
+			isRecord = true;
+		}
 
-    }
-    public void play (){
-	
-    	String[] args = new String[]{recordingsPath};
-    	strPlay = Gst.init("AudioPlayer", args);
+	}
 
-        playbin = new PlayBin2("AudioPlayer");
-        playbin.setVideoSink(ElementFactory.make("fakesink", "videosink"));
-//        System.out.println(gui.getSelectedPlayItem().toString());	     
+	public void play() {
+
+		String[] args = new String[] { recordingsPath };
+		strPlay = Gst.init("AudioPlayer", args);
+
+		playbin = new PlayBin2("AudioPlayer");
+		playbin.setVideoSink(ElementFactory.make("fakesink", "videosink"));
+		System.out.println(gui.getSelectedPlayItem());
 		playbin.setInputFile(new File(gui.getSelectedPlayItem()));
 
 		playbin.play();
