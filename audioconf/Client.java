@@ -83,7 +83,7 @@ public class Client {
 		Element src = ElementFactory.make("udpsrc", "Source");
 		if (multicast) {
 			System.out.println("multicast!");
-			src.set("multicast-group", "239.255.43.43");
+			src.set("multicast-group", clients);
 			src.set("auto-multicast", true);
 			src.set("multicast-iface", "eth0");
 		}
@@ -155,7 +155,8 @@ public class Client {
 		Element sink;
 		if (multicast) {
 			sink = ElementFactory.make("udpsink", "udpsink");
-			sink.set("host", "239.255.43.43");
+//			String[] arg = clients.split(",");
+			sink.set("host", clients);
 			sink.set("port", udp_port);
 			sink.set("auto-multicast", true);
 		} else {
@@ -185,6 +186,10 @@ public class Client {
 	
 	public void setPort(int port) {
 		udp_port = port;
+	}
+	
+	public void setMulticast(boolean mult) {
+		multicast = mult;
 	}
 
 }

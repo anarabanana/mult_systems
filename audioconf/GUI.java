@@ -15,6 +15,7 @@ import javax.swing.JToggleButton;
 import javax.swing.JLabel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JCheckBox;
 
 public class GUI {
 
@@ -32,6 +33,7 @@ public class GUI {
 	private Client client;
 	private JLabel lblLocalPort;
 	private JTextField txtPort;
+	private JCheckBox chckbxMulticast;
 
 	/**
 	 * Launch the application.
@@ -128,6 +130,7 @@ public class GUI {
 					System.out.println(listModelClients.toString());
 					setClientsFromList();
 					client.setPort(Integer.parseInt(txtPort.getText()));
+					client.setMulticast(chckbxMulticast.isSelected());
 					client.start();
 					tglbtnMuteSpeakers.setEnabled(true);
 					tglbtnMuteMicrophone.setEnabled(true);
@@ -172,6 +175,8 @@ public class GUI {
 				}
 			}
 		});
+		
+		chckbxMulticast = new JCheckBox("Multicast");
 		GroupLayout groupLayout = new GroupLayout(frmAudioConference.getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -185,24 +190,33 @@ public class GUI {
 							.addComponent(txtAddclient, GroupLayout.PREFERRED_SIZE, 154, GroupLayout.PREFERRED_SIZE)
 							.addGap(18)
 							.addComponent(btnAddClient)))
-					.addGap(39)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(lblLocalPort)
+						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(txtPort, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(btnSetPort))
-						.addComponent(lblOptions)
-						.addComponent(lblConnection)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(12)
+							.addComponent(tglbtnMuteSpeakers, GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE))
+						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(tglbtnMuteMicrophone, GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE))
+						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(tglbtnConnect, GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE))
+						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+							.addGap(31)
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(tglbtnMuteSpeakers, GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
-								.addComponent(tglbtnMuteMicrophone, GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)))
+								.addComponent(chckbxMulticast)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(lblLocalPort)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(txtPort, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
+									.addGap(18)
+									.addComponent(btnSetPort)))
+							.addGap(13))
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(12)
-							.addComponent(tglbtnConnect, GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)))
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(lblOptions))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(lblConnection)))
 					.addContainerGap())
 		);
 		groupLayout.setVerticalGroup(
@@ -215,23 +229,23 @@ public class GUI {
 						.addComponent(lblLocalPort)
 						.addComponent(txtPort, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(btnSetPort))
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 208, GroupLayout.PREFERRED_SIZE)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 208, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(btnRemoveClient))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(18)
+							.addComponent(chckbxMulticast)
+							.addPreferredGap(ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
 							.addComponent(lblConnection)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addGap(10)
 							.addComponent(tglbtnConnect)
-							.addGap(27)
+							.addGap(24)
 							.addComponent(lblOptions)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addGap(12)
 							.addComponent(tglbtnMuteMicrophone)
-							.addGap(18)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
 							.addComponent(tglbtnMuteSpeakers)))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(btnRemoveClient)
 					.addGap(17))
 		);
 		
