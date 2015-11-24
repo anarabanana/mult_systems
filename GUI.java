@@ -1,12 +1,10 @@
 import java.awt.EventQueue;
 
-import javax.management.modelmbean.ModelMBean;
 import javax.swing.JFrame;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.factories.FormFactory;
-import com.sun.jna.platform.win32.LMAccess;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -15,7 +13,6 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
-import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import java.awt.Toolkit;
@@ -29,17 +26,32 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.UIManager;
 
+/**
+ * The GUI class for the audio recorder/player.
+ */
 public class GUI extends JFrame {
 
+	/**
+	 * Main frame.
+	 */
 	private JFrame frmAudio;
-	private static String iconsPath = "src/resources/";
-	public DefaultListModel LM = new DefaultListModel();
-	
-	
-	// final JList list = new JList(filelist);
-	
-	FileFilter ff = new FileFilter() {
 
+	/**
+	 * Path to external resources, e.g. images.
+	 */
+	private static String resourcePath = "src/resources/";
+
+	/**
+	 * List model and list for the recordings.
+	 */
+	public DefaultListModel LM = new DefaultListModel();
+	JList list = new JList(LM);
+	JScrollPane scrollpane = new JScrollPane(list);
+
+	/**
+	 * Only allow .ogg and .mp3.
+	 */
+	FileFilter ff = new FileFilter() {
 		@Override
 		public boolean accept(File pathname) {
 			// TODO Auto-generated method stub
@@ -48,15 +60,10 @@ public class GUI extends JFrame {
 
 		}
 	};
-	
-	
-	//JList list = new JList(new File(Recorder.recordingsPath).listFiles(ff));
 
-	JList list = new JList(LM);
-	
-	
-	JScrollPane scrollpane = new JScrollPane(list);
-	
+	/**
+	 * The recorder.
+	 */
 	private Recorder audio;
 
 	/**
@@ -71,7 +78,7 @@ public class GUI extends JFrame {
 					GUI window = new GUI();
 					window.SetInitialFileList();
 					window.frmAudio.setVisible(true);
-					
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -80,36 +87,29 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Create the application.
+	 * Initialize the application.
 	 */
 	public GUI() {
 		initialize();
 		audio = new Recorder(this);
-
-		
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void SetInitialFileList()
-	{
-		File [] my_records;
+	private void SetInitialFileList() {
+		File[] my_records;
 		my_records = new File(Recorder.recordingsPath).listFiles(ff);
-		
-		for (File c : my_records)
-		{
+
+		for (File c : my_records) {
 			LM.addElement(c);
 		}
-		
+
 	}
-	public void addNewFiletoList(String nameandpath)
-	{
-		LM.addElement(nameandpath);
-	}
-	
-	
-	
+
+	/**
+	 * Sets up GUI.
+	 */
 	private void initialize() {
 		frmAudio = new JFrame();
 		frmAudio.setAlwaysOnTop(true);
@@ -117,7 +117,7 @@ public class GUI extends JFrame {
 		frmAudio.getContentPane().setForeground(SystemColor.controlHighlight);
 		frmAudio.getContentPane().setBackground(Color.WHITE);
 		frmAudio.setTitle("Audio recorder");
-		frmAudio.setIconImage(Toolkit.getDefaultToolkit().getImage(iconsPath + "MicrophoneHot.png"));
+		frmAudio.setIconImage(Toolkit.getDefaultToolkit().getImage(resourcePath + "MicrophoneHot.png"));
 		frmAudio.setBounds(100, 100, 722, 456);
 		frmAudio.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmAudio.getContentPane()
@@ -145,7 +145,7 @@ public class GUI extends JFrame {
 
 		JButton record_btn = new JButton("");
 		record_btn.setHorizontalAlignment(SwingConstants.LEFT);
-		record_btn.setIcon(new ImageIcon(iconsPath + "RecordPressed (1).png"));
+		record_btn.setIcon(new ImageIcon(resourcePath + "RecordPressed (1).png"));
 
 		record_btn.addActionListener(new ActionListener() {
 
@@ -166,7 +166,7 @@ public class GUI extends JFrame {
 		});
 
 		JButton stop_btn = new JButton("");
-		stop_btn.setIcon(new ImageIcon(iconsPath + "Stop1Normal (1).png"));
+		stop_btn.setIcon(new ImageIcon(resourcePath + "Stop1Normal (1).png"));
 		stop_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -176,7 +176,7 @@ public class GUI extends JFrame {
 		frmAudio.getContentPane().add(stop_btn, "6, 4");
 
 		JButton play_btn = new JButton("");
-		play_btn.setIcon(new ImageIcon(iconsPath + "Play1Pressed (1).png"));
+		play_btn.setIcon(new ImageIcon(resourcePath + "Play1Pressed (1).png"));
 
 		play_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -185,7 +185,7 @@ public class GUI extends JFrame {
 			}
 		});
 		frmAudio.getContentPane().add(play_btn, "8, 4, left, default");
-		volume_up_btn.setIcon(new ImageIcon(iconsPath + "VolumeNormalRed.png"));
+		volume_up_btn.setIcon(new ImageIcon(resourcePath + "VolumeNormalRed.png"));
 		frmAudio.getContentPane().add(volume_up_btn, "4, 10");
 
 		JButton volume_down_btn = new JButton("");
@@ -196,7 +196,7 @@ public class GUI extends JFrame {
 			}
 
 		});
-		volume_down_btn.setIcon(new ImageIcon(iconsPath + "VolumeDisabled.png"));
+		volume_down_btn.setIcon(new ImageIcon(resourcePath + "VolumeDisabled.png"));
 		frmAudio.getContentPane().add(volume_down_btn, "6, 10");
 
 		JButton mute_btn = new JButton("");
@@ -208,7 +208,7 @@ public class GUI extends JFrame {
 			}
 		});
 
-		mute_btn.setIcon(new ImageIcon(iconsPath + "mute-2.png"));
+		mute_btn.setIcon(new ImageIcon(resourcePath + "mute-2.png"));
 		frmAudio.getContentPane().add(mute_btn, "8, 10");
 
 		list.addListSelectionListener(new ListSelectionListener() {
@@ -230,13 +230,21 @@ public class GUI extends JFrame {
 		list.setVisibleRowCount(-1);
 
 	}
-
-	public String getSelectedPlayItem() {
-		return list.getSelectedValue().toString();
+	
+	/**
+	 * Adds a new file to the list.
+	 * @param nameandpath
+	 */
+	public void addNewFiletoList(String nameandpath) {
+		LM.addElement(nameandpath);
 	}
 
-	public void refreshFileList() {
-
+	/**
+	 * Gets a selected file from the list.
+	 * @return path to the file.
+	 */
+	public String getSelectedPlayItem() {
+		return list.getSelectedValue().toString();
 	}
 
 }
